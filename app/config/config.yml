@@ -69,3 +69,16 @@ swiftmailer:
 sensio_framework_extra:
    router:
         annotations: false
+
+easy_admin:
+    entities:
+        Automobile:
+            class: AppBundle\Entity\Automobile
+            list:
+                title: "Automobile"
+
+        Owner:
+            class: AppBundle\Entity\Owner
+            list:
+                title: "Owner"
+

@@ -34,7 +34,7 @@ class Automobile
      */
     private $mileage;
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -44,7 +44,7 @@ class Automobile
         $this->id = $id;
     }
 
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -54,7 +54,7 @@ class Automobile
         $this->name = $name;
     }
 
-    public function getBrand(): string
+    public function getBrand(): ?string
     {
         return $this->brand;
     }
@@ -64,7 +64,7 @@ class Automobile
         $this->brand = $brand;
     }
 
-    public function getMileage(): float
+    public function getMileage(): ?float
     {
         return $this->mileage;
     }

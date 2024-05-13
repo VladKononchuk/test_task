@@ -46,7 +46,7 @@ class Owner
         $this->automobile  = new ArrayCollection();
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -64,7 +64,7 @@ class Owner
         return $this->automobile;
     }
 
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -74,7 +74,7 @@ class Owner
         $this->name = $name;
     }
 
-    public function getSurname(): string
+    public function getSurname(): ?string
     {
         return $this->surname;
     }
@@ -84,7 +84,7 @@ class Owner
         $this->surname = $surname;
     }
 
-    public function getEmail(): string
+    public function getEmail(): ?string
     {
         return $this->email;
     }
