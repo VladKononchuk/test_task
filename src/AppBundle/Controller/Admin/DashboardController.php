@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class DashboardController extends AdminController
+final class DashboardController extends AdminController
 {
     /**
      * @Route("/admin", name="easyadmin")

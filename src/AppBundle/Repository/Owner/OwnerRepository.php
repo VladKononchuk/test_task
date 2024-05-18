@@ -2,10 +2,13 @@
 
 namespace AppBundle\Repository\Owner;
 
-use AppBundle\Entity\Owner;
+use AppBundle\Entity\Owner\Owner;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
+/**
+ * @extends ServiceEntityRepository<Owner>
+ */
 final class OwnerRepository extends ServiceEntityRepository implements OwnerRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
@@ -17,5 +20,10 @@ final class OwnerRepository extends ServiceEntityRepository implements OwnerRepo
     {
         $this->_em->persist($automobile);
         $this->_em->flush();
+    }
+
+    public function findOwners(string $name, string $surname): array
+    {
+        return $this->findBy(['name' => $name, 'surname' => $surname]);
     }
 }

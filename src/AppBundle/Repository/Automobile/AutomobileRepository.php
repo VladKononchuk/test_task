@@ -2,11 +2,13 @@
 
 namespace AppBundle\Repository\Automobile;
 
-use AppBundle\Entity\Automobile;
+use AppBundle\Entity\Automobile\Automobile;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
-use Doctrine\ORM\OptimisticLockException;
 
+/**
+ * @extends ServiceEntityRepository<Automobile>
+ */
 final class AutomobileRepository extends ServiceEntityRepository implements AutomobileRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
@@ -19,5 +21,10 @@ final class AutomobileRepository extends ServiceEntityRepository implements Auto
     {
         $this->_em->persist($automobile);
         $this->_em->flush();
+    }
+
+    public function findAutomobiles(string $name, string $brand): array
+    {
+        return $this->findBy(['name' => $name, 'brand' => $brand]);
     }
 }

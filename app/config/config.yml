@@ -71,14 +71,22 @@ sensio_framework_extra:
         annotations: false
 
 easy_admin:
+    design:
+        form:
+
+
     entities:
         Automobile:
-            class: AppBundle\Entity\Automobile
+            class: AppBundle\Entity\Automobile\Automobile
             list:
                 title: "Automobile"
 
+            edit:
+                save_button:
+                    label: 'dadad'
+
         Owner:
-            class: AppBundle\Entity\Owner
+            class: AppBundle\Entity\Owner\Owner
             list:
                 title: "Owner"
 

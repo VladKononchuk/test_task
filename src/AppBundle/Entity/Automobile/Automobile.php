@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace AppBundle\Entity;
+namespace AppBundle\Entity\Automobile;
 
+use AppBundle\Entity\Automobile\ValueObject\AutomobileStringValidation;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -49,9 +50,9 @@ class Automobile
         return $this->name;
     }
 
-    public function setName(string $name): void
+    public function setName(AutomobileStringValidation $stringSizeValidation): void
     {
-        $this->name = $name;
+        $this->name = $stringSizeValidation->value;
     }
 
     public function getBrand(): ?string
@@ -59,9 +60,9 @@ class Automobile
         return $this->brand;
     }
 
-    public function setBrand(string $brand): void
+    public function setBrand(AutomobileStringValidation $stringSizeValidation): void
     {
-        $this->brand = $brand;
+        $this->brand = $stringSizeValidation->value;
     }
 
     public function getMileage(): ?float
