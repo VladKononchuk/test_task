@@ -10,5 +10,8 @@ interface AutomobileRepositoryInterface
 {
     public function save(Automobile $automobile): void;
 
+    /**
+     * @return Automobile[]
+     */
     public function findAutomobiles(string $name, string $brand): array;
 }

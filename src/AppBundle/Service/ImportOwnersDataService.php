@@ -5,52 +5,67 @@ declare(strict_types=1);
 namespace AppBundle\Service;
 
 use AppBundle\Entity\Owner\Owner;
-use AppBundle\Entity\Owner\ValueObject\Email;
-use AppBundle\Entity\Owner\ValueObject\OwnerStringValidation;
 use AppBundle\Repository\Owner\OwnerRepositoryInterface;
 
 final class ImportOwnersDataService
 {
+    /**
+     * @var OwnerRepositoryInterface
+     */
     private $ownerRepository;
 
-    public function __construct(OwnerRepositoryInterface $ownerRepository)
-    {
+    /**
+     * @var AddAutomobileService
+     */
+    private $addAutomobileService;
+
+    public function __construct(
+        OwnerRepositoryInterface $ownerRepository,
+        AddAutomobileService $addAutomobileService
+
+    ) {
         $this->ownerRepository = $ownerRepository;
+        $this->addAutomobileService = $addAutomobileService;
     }
 
-    public function importOwnerData(): string
+    public function importOwnerData(array $owners, array $automobiles): string
     {
-        $contentOfOwner = file_get_contents(
-            '/home/vladislav/test_task/Owner.json'
-        );
-        $owners = json_decode($contentOfOwner, true);
         $invalidStrings = '';
 
         foreach ($owners as $owner) {
             try {
                 if ($this->ownerRepository->findOwners(
                     $owner['name'],
-                    $owner['surname']
+                    $owner['surname'],
                 )
                 ) {
                     foreach (
                         $this->ownerRepository->findOwners(
                             $owner['name'],
-                            $owner['surname']
+                            $owner['surname'],
                         ) as $own
                     ) {
-                        $own->setEmail(
-                            new Email($owner['email'])
+                        $own->setEmail($owner['email']);
+
+                        $this->addAutomobileService->addAutomobile(
+                            $own,
+                            $owner,
+                            $automobiles,
                         );
+
                         $this->ownerRepository->save($own);
                     }
                 } else {
                     $own = new Owner();
-                    $own->setName(new OwnerStringValidation($owner['name']));
-                    $own->setSurname(
-                        new OwnerStringValidation($owner['surname'])
+                    $own->setName($owner['name']);
+                    $own->setSurname($owner['surname']);
+                    $own->setEmail($owner['email']);
+
+                    $this->addAutomobileService->addAutomobile(
+                        $own,
+                        $owner,
+                        $automobiles,
                     );
-                    $own->setEmail(new Email($owner['email']));
 
                     $this->ownerRepository->save($own);
                 }
@@ -59,7 +74,7 @@ final class ImportOwnersDataService
                     " \nname: %s, surname: %s, email: %s;",
                     $owner['name'],
                     $owner['surname'],
-                    $owner['email']
+                    $owner['email'],
                 );
             }
         }

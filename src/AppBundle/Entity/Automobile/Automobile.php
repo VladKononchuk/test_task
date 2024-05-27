@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace AppBundle\Entity\Automobile;
 
-use AppBundle\Entity\Automobile\ValueObject\AutomobileStringValidation;
+use AppBundle\Entity\Automobile\ValueObject\StringSize;
 use Doctrine\ORM\Mapping as ORM;
+use AppBundle\Entity\Owner\Owner;
 
 /**
  * @ORM\Entity(repositoryClass="AppBundle\Repository\Automobile\AutomobileRepository")
@@ -35,6 +36,11 @@ class Automobile
      */
     private $mileage;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Owner\Owner", inversedBy="automobiles", cascade={"persist"})
+     */
+    private $owner;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -50,9 +56,9 @@ class Automobile
         return $this->name;
     }
 
-    public function setName(AutomobileStringValidation $stringSizeValidation): void
+    public function setName(string $name): void
     {
-        $this->name = $stringSizeValidation->value;
+        $this->name = (new StringSize($name))->value;
     }
 
     public function getBrand(): ?string
@@ -60,9 +66,9 @@ class Automobile
         return $this->brand;
     }
 
-    public function setBrand(AutomobileStringValidation $stringSizeValidation): void
+    public function setBrand(string $brand): void
     {
-        $this->brand = $stringSizeValidation->value;
+        $this->brand = (new StringSize($brand))->value;
     }
 
     public function getMileage(): ?float
@@ -73,5 +79,15 @@ class Automobile
     public function setMileage(float $mileage): void
     {
         $this->mileage = $mileage;
+    }
+
+    public function getOwner(): ?Owner
+    {
+        return $this->owner;
+    }
+
+    public function setOwner(?Owner $owner): void
+    {
+        $this->owner = $owner;
     }
 }

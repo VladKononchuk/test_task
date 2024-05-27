@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace AppBundle\Service;
 
 use AppBundle\Entity\Automobile\Automobile;
-use AppBundle\Entity\Automobile\ValueObject\AutomobileStringValidation;
 use AppBundle\Repository\Automobile\AutomobileRepositoryInterface;
 
 final class ImportAutomobilesDataService
 {
+    /**
+     * @var AutomobileRepositoryInterface
+     */
     private $automobileRepository;
 
     public function __construct(
@@ -18,40 +20,30 @@ final class ImportAutomobilesDataService
         $this->automobileRepository = $automobileRepository;
     }
 
-    public function importAutomobileData(): string
+    public function importAutomobileData(array $automobiles): string
     {
-        $contentOfAutomobile = file_get_contents(
-            '/home/vladislav/test_task/Automobile.json'
-        );
-        $automobiles = json_decode($contentOfAutomobile, true);
         $invalidStrings = '';
 
         foreach ($automobiles as $automobile) {
             try {
                 if ($this->automobileRepository->findAutomobiles(
                     $automobile['name'],
-                    $automobile['brand']
+                    $automobile['brand'],
                 )
                 ) {
                     foreach (
                         $this->automobileRepository->findAutomobiles(
                             $automobile['name'],
-                            $automobile['brand']
+                            $automobile['brand'],
                         ) as $auto
                     ) {
-                        $auto->setName(
-                            new AutomobileStringValidation($automobile['name'])
-                        );
+                        $auto->setMileage($automobile['mileage']);
                         $this->automobileRepository->save($auto);
                     }
                 } else {
                     $auto = new Automobile();
-                    $auto->setName(
-                        new AutomobileStringValidation($automobile['name'])
-                    );
-                    $auto->setBrand(
-                        new AutomobileStringValidation($automobile['brand'])
-                    );
+                    $auto->setName($automobile['name']);
+                    $auto->setBrand($automobile['brand']);
                     $auto->setMileage($automobile['mileage']);
 
                     $this->automobileRepository->save($auto);
@@ -61,7 +53,7 @@ final class ImportAutomobilesDataService
                     "\nname: %s, brand: %s, mileage: %s;",
                     $automobile['name'],
                     $automobile['brand'],
-                    $automobile['mileage']
+                    $automobile['mileage'],
                 );
             }
         }

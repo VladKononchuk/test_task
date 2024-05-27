@@ -1,0 +1,67 @@
+easy_admin:
+    design:
+        templates:
+            paginator: 'easyadmin/paginator.html.twig'
+            list: 'easyadmin/list.html.twig'
+
+    site_name: 'Entity'
+
+    new:
+        actions:
+            - { name: 'list',  label: 'cancel' }
+
+    edit:
+        actions:
+            - { name: 'delete',  label: 'delete' }
+            - { name: 'list',  label: 'cancel' }
+
+    entities:
+        Automobile:
+            class: AppBundle\Entity\Automobile\Automobile
+            delete-form:
+                title: 'dadada'
+            search:
+                title: "Automobile_search_result"
+            list:
+                title: "Automobile"
+                actions:
+                    - { name: 'new', label: 'new' }
+                    - { name: 'edit',  label: 'edit' }
+                    - { name: 'delete',  label: 'delete' }
+                    - { name: 'search', icon: 'search', label: 'search' }
+            edit:
+                title: "edit_automobile"
+            new:
+                title: 'new_automobile'
+
+        Owner:
+            class: AppBundle\Entity\Owner\Owner
+            search:
+                title: "Owner_search_result"
+            form:
+                fields:
+                    - { property: 'name' }
+                    - { property: 'surname' }
+                    - { property: 'email' }
+            list:
+                title: "Owner"
+                fields:
+                    - id
+                    - { property: 'name' }
+                    - { property: 'surname' }
+                    - { property: 'email' }
+                actions:
+                    - { name: 'new', label: 'new' }
+                    - { name: 'edit',  label: 'edit' }
+                    - { name: 'delete',  label: 'delete' }
+                    - { name: 'search', icon: 'search', label: 'search' }
+            show:
+                fields:
+                    - id
+                    - { property: 'name' }
+                    - { property: 'surname' }
+                    - { property: 'email' }
+            edit:
+                title: "edit_owner"
+            new:
+                title: 'new_owner'
