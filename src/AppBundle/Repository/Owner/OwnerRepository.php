@@ -9,10 +9,12 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 /**
  * @extends ServiceEntityRepository<Owner>
  */
-final class OwnerRepository extends ServiceEntityRepository implements OwnerRepositoryInterface
+final class OwnerRepository extends ServiceEntityRepository
+    implements OwnerRepositoryInterface
 {
-    public function __construct(ManagerRegistry $registry)
-    {
+    public function __construct(
+        ManagerRegistry $registry
+    ) {
         parent::__construct($registry, Owner::class);
     }
 
@@ -22,6 +24,9 @@ final class OwnerRepository extends ServiceEntityRepository implements OwnerRepo
         $this->_em->flush();
     }
 
+    /**
+     * @return Owner[]
+     */
     public function findOwners(string $name, string $surname): array
     {
         return $this->findBy(['name' => $name, 'surname' => $surname]);

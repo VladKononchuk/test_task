@@ -13,8 +13,19 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 final class DataImportCommand extends Command
 {
+    /**
+     * @var string
+     */
     protected static $defaultName = 'app:import-data';
+
+    /**
+     * @var ImportAutomobilesDataService
+     */
     private $importAutomobilesDataService;
+
+    /**
+     * @var ImportOwnersDataService
+     */
     private $importOwnersDataService;
 
     public function __construct(
@@ -26,20 +37,37 @@ final class DataImportCommand extends Command
         parent::__construct();
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
-    {
-        $io = new SymfonyStyle($input, $output);
+    public function execute(
+        InputInterface $input,
+        OutputInterface $output
+    ): void {
+        $contentOfOwner = file_get_contents(
+            $_ENV['OWNER_PATH']
+        );
+        $owners = json_decode($contentOfOwner, true);
 
-        $invalidOwnerStrings
-            = $this->importAutomobilesDataService->importAutomobileData();
+        $contentOfAutomobile = file_get_contents(
+            $_ENV['AUTOMOBILE_PATH']
+        );
+        $automobiles = json_decode($contentOfAutomobile, true);
+
         $invalidAutomobileStrings
-            = $this->importOwnersDataService->importOwnerData();
+            = $this->importAutomobilesDataService->importAutomobileData(
+            $automobiles,
+        );
+        $invalidOwnerStrings
+            = $this->importOwnersDataService->importOwnerData(
+            $owners,
+            $automobiles,
+        );
+
+        $io = new SymfonyStyle($input, $output);
 
         $io->comment(
             sprintf(
                 'Invalid strings: %s %s',
                 $invalidOwnerStrings,
-                $invalidAutomobileStrings
+                $invalidAutomobileStrings,
             )
         );
 

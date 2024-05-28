@@ -6,7 +6,7 @@ namespace AppBundle\Entity\Owner;
 
 use AppBundle\Entity\Automobile\Automobile;
 use AppBundle\Entity\Owner\ValueObject\Email;
-use AppBundle\Entity\Owner\ValueObject\OwnerStringValidation;
+use AppBundle\Entity\Owner\ValueObject\StringSize;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -24,10 +24,10 @@ class Owner
      */
     private $id;
 
-//    /**
-//     * @ORM\OneToMany(targetEntity="Automobile", mappedBy="owner")
-//     */
-//    private $automobile;
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Automobile\Automobile", mappedBy="owner", cascade={"remove"})
+     */
+    private $automobile;
 
     /**
      * @ORM\Column(type="string", length=50, options={"minLength": 3, "maxLength": 50})
@@ -44,10 +44,10 @@ class Owner
      */
     private $email;
 
-//    public function __construct()
-//    {
-//        $this->automobile  = new ArrayCollection();
-//    }
+    public function __construct()
+    {
+        $this->automobile = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -59,22 +59,14 @@ class Owner
         $this->id = $id;
     }
 
-//    /**
-//     * @return Collection|Automobile[]
-//     */
-//    public function getAutomobile(): Collection
-//    {
-//        return $this->automobile;
-//    }
-
     public function getName(): ?string
     {
         return $this->name;
     }
 
-    public function setName(OwnerStringValidation $stringSizeValidation): void
+    public function setName(string $name): void
     {
-        $this->name = $stringSizeValidation->value;
+        $this->name = (new StringSize($name))->value;
     }
 
     public function getSurname(): ?string
@@ -82,9 +74,9 @@ class Owner
         return $this->surname;
     }
 
-    public function setSurname(OwnerStringValidation $stringSizeValidation): void
+    public function setSurname(string $surname): void
     {
-        $this->surname = $stringSizeValidation->value;
+        $this->surname = (new StringSize($surname))->value;
     }
 
     public function getEmail(): ?string
@@ -92,8 +84,42 @@ class Owner
         return $this->email;
     }
 
-    public function setEmail(Email $email): void
+    public function setEmail(string $email): void
     {
-        $this->email = $email->value;
+        $this->email = (new Email($email))->value;
+    }
+
+    /**
+     * @return Collection|Automobile[]
+     */
+    public function getAutomobile(): Collection
+    {
+        return $this->automobile;
+    }
+
+    /**
+     * @param ArrayCollection $automobile
+     */
+    public function setAutomobile(ArrayCollection $automobile): void
+    {
+        $this->automobile = $automobile;
+    }
+
+    public function addAutomobile(Automobile $automobile): self
+    {
+        if (!$this->automobile->contains($automobile)) {
+            $this->automobile->add($automobile);
+            $automobile->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function __toString()
+    {
+        return sprintf(
+            "%s",
+            $this->id
+        );
     }
 }
